@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+
+  <name>kuri_edu</name>
+  <version>1.0.0</version>
+  <description>
+    Contains top level launch files for starting a kuri_edu robot for research purposes
+  </description>
+
+  <maintainer email="peter@mayfieldrobotics.com">Peter Baughman</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>gizmo_description</run_depend>
+  <run_depend>mobile_base_driver</run_depend>
+  <run_depend>depth_sensor_driver</run_depend>
+  <run_depend>madmux</run_depend>
+
+</package>
