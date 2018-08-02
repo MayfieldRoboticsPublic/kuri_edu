@@ -6,7 +6,7 @@ minimal autonomous behavior and no Kuri assets (animations, sounds, etc)
 <launch>
 
     <!-- Kuri motor control, depthsensor, and keyboard teleop controls -->
-    <include file="$(find mobile_base_driver)/launch/kuri_remote.launch"/>
+    <include file="$(find kuri_edu)/launch/kuri_remote.launch"/>
 
     <!-- Kuri's eye camera -->
     <include file="$(find madmux)/launch/madmux_daemon.launch"/>

@@ -1,0 +1,7 @@
+<launch>
+    <include file="$(find mobile_base_driver)/launch/kuri_drive.launch"/>
+
+    <node name="rc_kuri"
+          pkg="kuri_edu"
+          type="simple_kuri" />
+</launch>
