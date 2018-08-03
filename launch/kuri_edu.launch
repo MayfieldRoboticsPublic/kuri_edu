@@ -11,4 +11,7 @@ minimal autonomous behavior and no Kuri assets (animations, sounds, etc)
     <!-- Kuri's eye camera -->
     <include file="$(find madmux)/launch/madmux_daemon.launch"/>
 
+    <!-- Kuri's face recognition -->
+    <include file="$(find vision_bridge)/launch/vision_bridge.launch"/>
+
 </launch>
