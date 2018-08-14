@@ -7,6 +7,7 @@ import mayfield_utils
 from mobile_base import SafetyClient
 from mobile_base import JointStates
 from mobile_base import HeadClient
+from vision_bridge import VisionClient
 
 
 class SimpleKuriClient(object):
@@ -21,6 +22,7 @@ class SimpleKuriClient(object):
         self._safety_client = SafetyClient()
         self._joint_states = JointStates()
         self._head_client = HeadClient(self._joint_states)
+        self._vision_client = VisionClient()
 
         # The simple client doesn't do anything with the safety events.
         # We're just going to override all of the safety systems so the
@@ -33,12 +35,17 @@ class SimpleKuriClient(object):
         assert self._head_client.wait_for_server(timeout=rospy.Duration(30.0))
         self._head_client.pan_and_tilt(
             pan=HeadClient.PAN_NEUTRAL,
-            tilt=HeadClient.TILT_NEUTRAL,
+            tilt=HeadClient.TILT_UP,
             duration=1.0
         )
         self._head_client.eyes_to(
             radians=HeadClient.EYES_OPEN,
             duration=0.5
+        )
+
+        # Activate vision detections
+        self._vision_client.activate_module(
+            module_name=VisionClient.FACE_DETECTOR
         )
 
         # The mobile base driver listens on the /mobile_base/commands/velocity
@@ -63,6 +70,11 @@ class SimpleKuriClient(object):
         )
 
     def shutdown(self):
+        try:
+            self._vision_client.deactivate_all_modules()
+        except Exception:
+            pass
+
         self._cmd_vel_sub.unregister()
         self._cmd_vel_pub.unregister()
 
