@@ -28,12 +28,20 @@ source /opt/edu/setup.bash
 source /opt/ci/setup.bash --extend
 set -u
 
-echo "Building kuri_edu package"
+echo -e "\nBuilding kuri_edu package"
 catkin_make --source .
 
-echo "Running Tests"
+echo -e "\nRunning Tests"
 set +u  # Ugh. . .
 source ./devel/setup.bash
 set -u
 catkin_make run_tests --source .
 catkin_test_results
+
+echo -e "\nCoverage Report:"
+# Finally, print out some final coverage numbers
+# If ROS tests are added, their coverage files get dropped in the rostest folder
+# combine that with the unit test coverage before generating a report
+# coverage combine -a kuri_edu/rostest/.coverage
+coverage report
+coverage html  # For running locally - makes it easy to see what lines are hit
