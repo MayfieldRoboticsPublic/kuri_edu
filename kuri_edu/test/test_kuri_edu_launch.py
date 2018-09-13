@@ -19,6 +19,7 @@ def check_launch_file(file_name):
 def test_kuri_launch():
     check_launch_file("kuri_edu.launch")
 
+
 @attr("gbz")
 def test_kuri_remote_launch():
     check_launch_file("kuri_remote.launch")

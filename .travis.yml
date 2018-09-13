@@ -22,9 +22,12 @@ before_install:
   - export PATH=$(echo $PATH | tr ':' "\n" | sed '/\/opt\/python/d' | tr "\n" ":" | sed "s|::|:|g")
 
 install:
-  - sudo apt-get install lcov
+  - sudo pip install flake8
   - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
   - docker pull ${DOCKER_IMAGE}:${TRAVIS_BRANCH} || exit 1
+
+before_script:
+  - flake8 .
 
 script:
   - |
@@ -34,15 +37,3 @@ script:
       -v ${TRAVIS_BUILD_DIR}:/root/kuri_edu \
       ${DOCKER_IMAGE}:${TRAVIS_BRANCH} \
       /root/kuri_edu/ci_tools/ci.bash
-
-after_success:
-  # - cd ${TRAVIS_BUILD_DIR}
-  # - sudo chown -R $(whoami) .
-  # - lcov --directory . --capture --output-file coverage_test.info
-  # - lcov -a coverage_base.info -a coverage_test.info --output-file coverage_full.info
-  # # Remove the base files or codecov will find them
-  # - rm coverage_base.info coverage_test.info
-  # # Remove coverage from system libs, tests
-  # - lcov --extract coverage_full.info '*/mobile_base/*' --output-file coverage_full.info
-  # - lcov --remove coverage_full.info '*/test/*' --output-file coverage_full.info
-  # - lcov -l coverage_full.info
