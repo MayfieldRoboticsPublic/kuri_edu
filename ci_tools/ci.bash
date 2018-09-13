@@ -35,5 +35,5 @@ echo "Running Tests"
 set +u  # Ugh. . .
 source ./devel/setup.bash
 set -u
-catkin_make run_tests
+catkin_make run_tests --source .
 catkin_test_results
