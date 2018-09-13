@@ -1,0 +1,17 @@
+<!--
+Launches the EDU version of Kuri.  Useful for academic purposes, but with
+minimal autonomous behavior and no Kuri assets (animations, sounds, etc)
+-->
+
+<launch>
+
+    <!-- Kuri motor control, depthsensor, and keyboard teleop controls -->
+    <include file="$(find kuri_edu)/launch/kuri_remote.launch"/>
+
+    <!-- Kuri's eye camera -->
+    <include file="$(find madmux)/launch/madmux_daemon.launch"/>
+
+    <!-- Kuri's face recognition -->
+    <include file="$(find vision_bridge)/launch/vision_bridge.launch"/>
+
+</launch>
