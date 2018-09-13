@@ -1,0 +1,39 @@
+sudo: required
+services:
+  - docker
+
+branches:
+  only:
+    - master
+
+env:
+  global:
+    - DOCKER_IMAGE="mayfieldrobotics/gizmo_base"
+
+notifications:
+  email:
+    recipients:
+      - dev@mayfieldrobotics.com
+    on_success: change
+    on_failure: change
+
+before_install:
+  # https://github.com/travis-ci/travis-ci/issues/5326
+  - export PATH=$(echo $PATH | tr ':' "\n" | sed '/\/opt\/python/d' | tr "\n" ":" | sed "s|::|:|g")
+
+install:
+  - sudo pip install flake8
+  - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+  - docker pull ${DOCKER_IMAGE}:${TRAVIS_BRANCH} || exit 1
+
+before_script:
+  - flake8 .
+
+script:
+  - |
+    docker run --rm \
+      -e CONTINUOUS_INTEGRATION=${CONTINUOUS_INTEGRATION} \
+      -e TRAVIS_BRANCH=${TRAVIS_BRANCH} \
+      -v ${TRAVIS_BUILD_DIR}:/root/kuri_edu \
+      ${DOCKER_IMAGE}:${TRAVIS_BRANCH} \
+      /root/kuri_edu/ci_tools/ci.bash
