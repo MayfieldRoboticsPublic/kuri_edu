@@ -36,15 +36,48 @@ class TestSafetyController(maytest.desktop.RosTestBase):
         # Wait for the DUT to be online before starting
         mayfield_utils.wait_for_nodes(['safety_controller'])
 
-    def test_01_kuri_backs_up_when_bumped(self):
-        rospy.loginfo("test_01_kuri_backs_up_when_bumped started")
+    def test_01_kuri_drives_on_standard_topics(self):
+        rospy.loginfo("test_01_kuri_drives_on_standard_topics started")
 
+        initial_pos = self.get_gizmo_location()
+
+        r = rospy.Rate(5)
+        # Drive forward half a meter:
+        while self.get_gizmo_location()[0] - initial_pos[0] <= 0.5:
+            self.vel_pub.publish(
+                geometry_msgs.msg.Twist(
+                    linear=geometry_msgs.msg.Vector3(1.0, 0, 0),
+                    angular=geometry_msgs.msg.Vector3(0, 0, 0)
+                )
+            )
+            r.sleep()
+
+        self.vel_pub.publish(
+            geometry_msgs.msg.Twist(
+                linear=geometry_msgs.msg.Vector3(0, 0, 0),
+                angular=geometry_msgs.msg.Vector3(0, 0, 0)
+            )
+        )
+        rospy.sleep(1.0)
+
+        self.assertGreater(
+            self.get_gizmo_location()[0] - initial_pos[0],
+            0.5
+        )
+
+    def test_02_kuri_backs_up_when_bumped(self):
+        rospy.loginfo("test_01_kuri_backs_up_when_bumped started")
+        self._check_bump_backup([True, False, False])
+        self._check_bump_backup([False, True, False])
+        self._check_bump_backup([False, False, True])
+
+    def _check_bump_backup(self, bumps=[True, True, True]):
         #Establish initial conditions:
         initial_pos = self.get_gizmo_location()
         status_mon = SafetyStatusMonitor()
 
         # Test Stimulus
-        self.kick_srv(True, False, False)
+        self.kick_srv(*bumps)
 
         # Wait for kuri to react
         status_mon.assertSafetyConditionSeen()
@@ -54,6 +87,9 @@ class TestSafetyController(maytest.desktop.RosTestBase):
         final_pos = self.get_gizmo_location()
         backup_distance = final_pos[0] - initial_pos[0]
         self.assertLess(backup_distance, -0.01)
+
+    def test_03_kuri_continues_to_drive(self):
+        self.test_01_kuri_drives_on_standard_topics()
 
 
 class SafetyStatusMonitor(object):
