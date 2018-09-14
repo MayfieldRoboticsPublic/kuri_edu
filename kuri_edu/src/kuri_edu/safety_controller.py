@@ -70,34 +70,39 @@ class SafetyController(object):
 
                 current_status = self._safety_client.get_safety_status()
 
-                if self.HANDLED_EVENTS.intersection(current_status) != set():
+                if self.HANDLED_EVENTS.intersection(current_status):
+                    # Lock is necessary to make sure the _forward_twists
+                    # method is not in between checking the _block_twists bool
+                    # and sending out another twist.  Once we've set
+                    # _block_twists, the _forward_twists method won't race
+                    # anymore.
                     with self._sync_lock:
                         self._block_twists = True
 
+                    # Just in case a forward twist is still in the out queue:
+                    self._stop()
+
                     # Override the safety status and back the robot up
-                    self._stop()  # in case a forward velocity is enqueued
                     self._safety_client.safety_override(current_status)
-
                     self._back_up(rate)
-
                     self._safety_client.safety_override(self.UNHANDLED_EVENTS)
-
                     self._safety_client.safety_clear(current_status)
+
+                    # There's no race with _forward_twists when re-enabling
+                    # this
                     self._block_twists = False
 
                 rate.sleep()
             except rospy.exceptions.ROSInterruptException:
                 return
 
-    def _stop(self):
-        self._cmd_vel_pub.publish(
-            geometry_msgs.msg.Twist(
-                linear=geometry_msgs.msg.Vector3(0, 0, 0),
-                angular=geometry_msgs.msg.Vector3(0, 0, 0)
-            )
-        )
+    def shutdown(self):
+        self._safety_client.shutdown()
 
     def _back_up(self, rate):
+        '''
+        Backs the robot up for ~ half a second
+        '''
         for _ in range(self.SAFETY_HZ / 2):
             self._cmd_vel_pub.publish(
                 geometry_msgs.msg.Twist(
@@ -107,9 +112,6 @@ class SafetyController(object):
             )
             rate.sleep()
         self._stop()
-
-    def shutdown(self):
-        self._safety_client.shutdown()
 
     def _forward_twists(self, msg):
         '''
@@ -121,3 +123,14 @@ class SafetyController(object):
         with self._sync_lock:
             if not self._block_twists:
                 self._cmd_vel_pub.publish(msg)
+
+    def _stop(self):
+        '''
+        Sends a zero velocity twist to the mobile base driver
+        '''
+        self._cmd_vel_pub.publish(
+            geometry_msgs.msg.Twist(
+                linear=geometry_msgs.msg.Vector3(0, 0, 0),
+                angular=geometry_msgs.msg.Vector3(0, 0, 0)
+            )
+        )
