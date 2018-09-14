@@ -64,7 +64,7 @@ class SafetyController(object):
             mayfield_msgs.msg.NodeStatus("safety_controller", True)
         )
 
-        rate = rospy.Rate(self.SAFETY_HZ) # 10hz by default
+        rate = rospy.Rate(self.SAFETY_HZ)  # 10hz by default
         while not rospy.is_shutdown():
             try:
 

@@ -6,7 +6,6 @@ import rospy
 
 import geometry_msgs.msg
 
-import mobile_base
 import mobile_base_driver.msg
 
 import gizmo_hw_sim.srv
@@ -72,7 +71,7 @@ class TestSafetyController(maytest.desktop.RosTestBase):
         self._check_bump_backup([False, False, True])
 
     def _check_bump_backup(self, bumps=[True, True, True]):
-        #Establish initial conditions:
+        # Establish initial conditions:
         initial_pos = self.get_gizmo_location()
         status_mon = SafetyStatusMonitor()
 
