@@ -8,8 +8,9 @@ catkin_python_setup()
 catkin_package()
 
 install(PROGRAMS
-  scripts/simple_kuri
+  scripts/head_control
   scripts/safety_controller
+  scripts/simple_kuri
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
