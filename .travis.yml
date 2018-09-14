@@ -33,7 +33,7 @@ script:
   - |
     docker run --rm \
       -e CONTINUOUS_INTEGRATION=${CONTINUOUS_INTEGRATION} \
-      -e TRAVIS_BRANCH=${TRAVIS_BRANCH} \
+      -e TRAVIS_BRANCH=develop \ # Use the 'develop' GBZ to build for now ${TRAVIS_BRANCH} \
       -v ${TRAVIS_BUILD_DIR}:/root/kuri_edu \
       ${DOCKER_IMAGE}:${TRAVIS_BRANCH} \
       /root/kuri_edu/ci_tools/ci.bash
