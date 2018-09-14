@@ -1,0 +1,16 @@
+<!--
+Launches the safety controller node, which is responsible for automatically
+backing kuri away from bumps
+-->
+
+<launch>
+
+    <arg name="cla" default=""/> <!-- Command-line arguments -->
+
+    <node name="safety_controller"
+          pkg="kuri_edu"
+          type="safety_controller"
+          required="true"
+          args="$(arg cla)"
+    />
+</launch>

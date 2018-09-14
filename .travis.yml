@@ -30,10 +30,13 @@ before_script:
   - flake8 .
 
 script:
+  # We're forcing TRAVIS_BRANCH=develop below because unlike any of the private repos,
+  # this repo doesn't have a 'develop' integration branch.  A master binary is a bit too
+  # far behind to get this to build, so we're going to force it to use develop bins
   - |
     docker run --rm \
       -e CONTINUOUS_INTEGRATION=${CONTINUOUS_INTEGRATION} \
-      -e TRAVIS_BRANCH=${TRAVIS_BRANCH} \
+      -e TRAVIS_BRANCH=develop \
       -v ${TRAVIS_BUILD_DIR}:/root/kuri_edu \
       ${DOCKER_IMAGE}:${TRAVIS_BRANCH} \
       /root/kuri_edu/ci_tools/ci.bash
