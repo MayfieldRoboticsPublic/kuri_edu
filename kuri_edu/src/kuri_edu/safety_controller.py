@@ -3,6 +3,7 @@ import threading
 import geometry_msgs.msg
 import rospy
 
+import mayfield_msgs.msg
 import mayfield_utils
 import mobile_base
 
@@ -17,6 +18,13 @@ class SafetyController(object):
     SAFETY_HZ = 10
 
     def __init__(self):
+
+        self._pub = rospy.Publisher(
+            "node_online",
+            mayfield_msgs.msg.NodeStatus,
+            latch=True,
+            queue_size=1,
+        )
 
         # Controllers need to be loaded before we can run
         mayfield_utils.wait_for_nodes(
@@ -50,6 +58,11 @@ class SafetyController(object):
         )
 
     def run(self):
+
+        # Indicate to the world that we're running and ready to go:
+        self._pub.publish(
+            mayfield_msgs.msg.NodeStatus("safety_controller", True)
+        )
 
         rate = rospy.Rate(self.SAFETY_HZ) # 10hz by default
         while not rospy.is_shutdown():

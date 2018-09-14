@@ -33,8 +33,8 @@ class TestSafetyController(maytest.desktop.RosTestBase):
             gizmo_hw_sim.srv.Kick
         )
 
-        # Wait for the mobile base controller to be onlin before starting
-        mayfield_utils.wait_for_nodes(['controllers'])
+        # Wait for the DUT to be online before starting
+        mayfield_utils.wait_for_nodes(['safety_controller'])
 
     def test_01_kuri_backs_up_when_bumped(self):
         rospy.loginfo("test_01_kuri_backs_up_when_bumped started")
@@ -44,7 +44,7 @@ class TestSafetyController(maytest.desktop.RosTestBase):
         status_mon = SafetyStatusMonitor()
 
         # Test Stimulus
-        self.kick_srv(True, False, True)
+        self.kick_srv(True, False, False)
 
         # Wait for kuri to react
         status_mon.assertSafetyConditionSeen()
