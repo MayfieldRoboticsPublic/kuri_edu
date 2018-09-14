@@ -25,4 +25,3 @@ if __name__ == '__main__':
         safety_controller.shutdown()
         if 'cov' in locals():
             cov.stop()
-            cov.xml_report(ignore_errors=True)

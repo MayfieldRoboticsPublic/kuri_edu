@@ -35,13 +35,19 @@ echo -e "\nRunning Tests"
 set +u  # Ugh. . .
 source ./devel/setup.bash
 set -u
-catkin_make run_tests --source .
+catkin_make run_tests -j1 --source .
 catkin_test_results
 
 echo -e "\nCoverage Report:"
+# Glue together the .coverage files from different locations:
+# If a node generates its own coverage and was run in a ROS test, its numbers
+# will be in ~/.ros/.coverage
+# If code is run in the context of a ROS test with --coverage, its coverage will
+# be in kuri_edu/rostest/.coverage
+coverage combine -a ~/.ros/.coverage
+# coverage combine -a kuri_edu/rostest/.coverage # Nothing using this yet
+
 # Finally, print out some final coverage numbers
-# If ROS tests are added, their coverage files get dropped in the rostest folder
-# combine that with the unit test coverage before generating a report
-# coverage combine -a kuri_edu/rostest/.coverage
 coverage report
+coverage xml   # For upload to a service like codecov.io
 coverage html  # For running locally - makes it easy to see what lines are hit
