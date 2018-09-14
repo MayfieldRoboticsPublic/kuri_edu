@@ -24,4 +24,5 @@ if(CATKIN_ENABLE_TESTING)
   catkin_add_nosetests(test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
   add_rostest(rostest/test_safety_controller.launch)
+  add_rostest(rostest/test_head_controller.launch)
 endif()

@@ -1,11 +1,9 @@
-import threading
-
-import geometry_msgs.msg
 import rospy
 
 import mayfield_msgs.msg
 import mayfield_utils
 import mobile_base
+from mobile_base import HeadClient
 
 
 class HeadController(object):
@@ -38,7 +36,7 @@ class HeadController(object):
 
         # Indicate to the world that we're running and ready to go:
         self._pub.publish(
-            mayfield_msgs.msg.NodeStatus("safety_controller", True)
+            mayfield_msgs.msg.NodeStatus("head_controller", True)
         )
 
         # At the start, open Kuri's eyes and point the head up:
@@ -55,7 +53,7 @@ class HeadController(object):
         try:
             rospy.spin()
         except rospy.exceptions.ROSInterruptExcepion:
-            return 
+            return
 
     def shutdown(self):
         self._joint_states.shutdown()

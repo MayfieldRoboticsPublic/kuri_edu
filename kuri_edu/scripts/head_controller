@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     rospy.init_node('head_controller')
 
-    head_controller = kuri_edu.SafetyController()
+    head_controller = kuri_edu.HeadController()
 
     try:
         head_controller.run()
