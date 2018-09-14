@@ -53,25 +53,28 @@ class SafetyController(object):
 
         rate = rospy.Rate(self.SAFETY_HZ) # 10hz by default
         while not rospy.is_shutdown():
+            try:
 
-            current_status = self._safety_client.get_safety_status()
+                current_status = self._safety_client.get_safety_status()
 
-            if self.HANDLED_EVENTS.intersection(current_status) != set():
-                with self._sync_lock:
-                    self._block_twists = True
+                if self.HANDLED_EVENTS.intersection(current_status) != set():
+                    with self._sync_lock:
+                        self._block_twists = True
 
-                # Override the safety status and back the robot up
-                self._stop()  # in case a forward velocity is still enqueued
-                self._safety_client.safety_override(current_status)
+                    # Override the safety status and back the robot up
+                    self._stop()  # in case a forward velocity is enqueued
+                    self._safety_client.safety_override(current_status)
 
-                self._back_up(rate)
+                    self._back_up(rate)
 
-                self._safety_client.safety_override(self.UNHANDLED_EVENTS)
+                    self._safety_client.safety_override(self.UNHANDLED_EVENTS)
 
-                self._safety_client.safety_clear(current_status)
-                self._block_twists = False
+                    self._safety_client.safety_clear(current_status)
+                    self._block_twists = False
 
-            rate.sleep()
+                rate.sleep()
+            except rospy.exceptions.ROSInterruptException:
+                return
 
     def _stop(self):
         self._cmd_vel_pub.publish(
