@@ -18,4 +18,7 @@
   <run_depend>depth_sensor_driver</run_depend>
   <run_depend>madmux</run_depend>
 
+  <test_depend>rosunit</test_depend>
+  <test_depend>gizmo_gazebo</test_depend>
+
 </package>

@@ -28,7 +28,7 @@ class SafetyController(object):
         # handle so they'll be ignored by the hardware
         self.UNHANDLED_EVENTS = (
             self._safety_client.safety_statuses()  # All statuses
-            - HANDLED_EVENTS                       # Minus the ones we handle
+            - self.HANDLED_EVENTS                  # Minus the ones we handle
         )
         self._safety_client.safety_override(self.UNHANDLED_EVENTS)
 
@@ -56,7 +56,7 @@ class SafetyController(object):
 
             current_status = self._safety_client.get_safety_status()
 
-            if HANDLED_EVENTS.intersection(current_status) != set():
+            if self.HANDLED_EVENTS.intersection(current_status) != set():
                 with self._sync_lock:
                     self._block_twists = True
 
@@ -68,7 +68,7 @@ class SafetyController(object):
 
                 self._safety_client.safety_override(self.UNHANDLED_EVENTS)
 
-                self._safety_clear(current_status)
+                self._safety_client.safety_clear(current_status)
                 self._block_twists = False
 
             rate.sleep()
@@ -76,7 +76,7 @@ class SafetyController(object):
     def _stop(self):
         self._cmd_vel_pub.publish(
             geometry_msgs.msg.Twist(
-                linear=geometry_msgs.msg.Vector3(0, 0, 0)
+                linear=geometry_msgs.msg.Vector3(0, 0, 0),
                 angular=geometry_msgs.msg.Vector3(0, 0, 0)
             )
         )
@@ -85,7 +85,7 @@ class SafetyController(object):
         for _ in range(self.SAFETY_HZ / 2):
             self._cmd_vel_pub.publish(
                 geometry_msgs.msg.Twist(
-                    linear=geometry_msgs.msg.Vector3(-0.1, 0, 0)
+                    linear=geometry_msgs.msg.Vector3(-0.1, 0, 0),
                     angular=geometry_msgs.msg.Vector3(0, 0, 0)
                 )
             )
