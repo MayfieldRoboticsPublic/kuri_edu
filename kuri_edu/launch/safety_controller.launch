@@ -1,0 +1,12 @@
+<!--
+Launches the safety controller node, which is responsible for automatically
+backing kuri away from bumps
+-->
+
+<launch>
+    <node name="safety_controller"
+          pkg="kuri_edu"
+          type="safety_controller"
+          required="true"
+    />
+</launch>

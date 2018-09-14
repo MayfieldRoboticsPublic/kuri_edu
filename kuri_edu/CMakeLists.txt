@@ -9,6 +9,7 @@ catkin_package()
 
 install(PROGRAMS
   scripts/simple_kuri
+  scripts/safety_controller
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
