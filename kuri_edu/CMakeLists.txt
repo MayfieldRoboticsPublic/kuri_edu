@@ -18,6 +18,8 @@ install(DIRECTORY launch
 )
 
 if(CATKIN_ENABLE_TESTING)
+  find_package(rostest REQUIRED)
+
   catkin_add_nosetests(test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
   add_rostest(rostest/test_safety_controller.launch)
