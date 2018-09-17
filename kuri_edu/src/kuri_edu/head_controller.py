@@ -32,6 +32,15 @@ class HeadController(object):
         # Make sure the head client is ready to be used
         assert self._head_client.wait_for_server(timeout=rospy.Duration(30.0))
 
+        # Vision client activates and deactivates face detection
+        self._vision_client = VisionClient()
+        # Activate vision detections.  This eats up a lot of CPU and it may
+        # not be possible to run this at all times, especially when mapping
+        self._vision_client.activate_module(
+            module_name=VisionClient.FACE_DETECTOR
+        )
+
+
     def run(self):
 
         # At the start, open Kuri's eyes and point the head up:
@@ -58,5 +67,11 @@ class HeadController(object):
             return
 
     def shutdown(self):
-        self._joint_states.shutdown()
+        try:
+            self._vision_client.deactivate_all_modules()
+        except Exception:
+            # This could fail if the ROS master is shutting down
+            pass
+
         self._head_client.shutdown()
+        self._joint_states.shutdown()
