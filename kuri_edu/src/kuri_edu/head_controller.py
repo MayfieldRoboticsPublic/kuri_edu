@@ -5,6 +5,7 @@ import mayfield_utils
 import mobile_base
 from mobile_base import HeadClient
 from vision_bridge import VisionClient
+import vision_msgs.msg
 
 
 class HeadController(object):
@@ -41,6 +42,12 @@ class HeadController(object):
             module_name=VisionClient.FACE_DETECTOR
         )
 
+        self._vision_sub = rospy.Subscriber(
+            "vision/results",
+            vision_msgs.msg.FrameResults,
+            self._face_cb
+        )
+
     def run(self):
 
         # At the start, open Kuri's eyes and point the head up:
@@ -67,6 +74,8 @@ class HeadController(object):
             return
 
     def shutdown(self):
+        self._vision_sub.unregister()
+
         try:
             self._vision_client.deactivate_all_modules()
         except Exception:
@@ -75,3 +84,14 @@ class HeadController(object):
 
         self._head_client.shutdown()
         self._joint_states.shutdown()
+
+    def _face_cb(self, msg):
+        # Use `rosmsg show vision_msgs/FrameResults to see what the msg object
+        # looks like
+
+        if msg.faces.faces:
+            # This will likely get annoying quickly if you want to use ros
+            # logs for any other purpose.  Uncomment to see in the logs when
+            # kuri sees a face
+            rospy.loginfo("Saw Face!")
+            pass
