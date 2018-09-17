@@ -34,11 +34,6 @@ class HeadController(object):
 
     def run(self):
 
-        # Indicate to the world that we're running and ready to go:
-        self._pub.publish(
-            mayfield_msgs.msg.NodeStatus("head_controller", True)
-        )
-
         # At the start, open Kuri's eyes and point the head up:
         self._head_client.pan_and_tilt(
             pan=HeadClient.PAN_NEUTRAL,
@@ -48,6 +43,13 @@ class HeadController(object):
         self._head_client.eyes_to(
             radians=HeadClient.EYES_OPEN,
             duration=0.5
+        )
+
+        assert self._head_client.wait_for_done(5.0), "head client timed out"
+
+        # Indicate to the world that we're running and ready to go:
+        self._pub.publish(
+            mayfield_msgs.msg.NodeStatus("head_controller", True)
         )
 
         try:
