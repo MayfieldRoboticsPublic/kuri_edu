@@ -4,6 +4,7 @@ import mayfield_msgs.msg
 import mayfield_utils
 import mobile_base
 from mobile_base import HeadClient
+from vision_bridge import VisionClient
 
 
 class HeadController(object):
@@ -39,7 +40,6 @@ class HeadController(object):
         self._vision_client.activate_module(
             module_name=VisionClient.FACE_DETECTOR
         )
-
 
     def run(self):
 
