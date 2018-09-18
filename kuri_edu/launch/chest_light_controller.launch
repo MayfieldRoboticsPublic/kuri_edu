@@ -1,0 +1,17 @@
+<!--
+Launches the chest light node, which by default maps battery status onto
+the chest LED and plays a simple animation to indicate that the software
+is running
+-->
+
+<launch>
+
+    <arg name="cla" default=""/> <!-- Command-line arguments -->
+
+    <node name="chest_led_controller"
+          pkg="kuri_edu"
+          type="chest_led_controller"
+          required="true"
+          args="$(arg cla)"
+    />
+</launch>
