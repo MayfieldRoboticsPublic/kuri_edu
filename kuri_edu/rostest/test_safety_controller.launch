@@ -1,6 +1,6 @@
 <launch>
 
-    <!-- Start Kuri in a corner facing the wall so we can front-bump--> 
+    <!-- Start Kuri in an empty world -->
     <include file="$(find gizmo_gazebo)/launch/gizmo_sim.launch">
         <arg name="gui" value="false"/>
     </include>

@@ -1,0 +1,25 @@
+<launch>
+
+    <!-- Start Kuri in an empty world-->
+    <include file="$(find gizmo_gazebo)/launch/gizmo_sim.launch">
+        <arg name="gui" value="false"/>
+    </include>
+
+    <!-- Head controller node expects vision bridge to be running -->
+    <include file="$(find vision_bridge)/launch/vision_bridge.launch">
+        <arg name="madmux_socket" value="NULL"/>
+        <env name="BLOCK_OPENCL" value="YES"/>
+    </include>
+
+    <!-- The node that's being tested: -->
+    <include file="$(find kuri_edu)/launch/head_controller.launch">
+        <arg name="cla" value="coverage"/>
+    </include>
+
+    <test test-name="test_head_controller"
+          pkg="kuri_edu"
+          time-limit="300"
+          type="test_head_controller.py"
+          cwd="node"/>
+
+</launch>

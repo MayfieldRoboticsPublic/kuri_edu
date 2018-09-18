@@ -8,8 +8,9 @@ catkin_python_setup()
 catkin_package()
 
 install(PROGRAMS
-  scripts/simple_kuri
+  scripts/head_control
   scripts/safety_controller
+  scripts/simple_kuri
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
@@ -23,4 +24,5 @@ if(CATKIN_ENABLE_TESTING)
   catkin_add_nosetests(test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
   add_rostest(rostest/test_safety_controller.launch)
+  add_rostest(rostest/test_head_controller.launch)
 endif()
