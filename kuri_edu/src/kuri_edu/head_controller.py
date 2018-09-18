@@ -86,12 +86,18 @@ class HeadController(object):
         self._joint_states.shutdown()
 
     def _face_cb(self, msg):
-        # Use `rosmsg show vision_msgs/FrameResults to see what the msg object
-        # looks like
+        # This callback is called whenever we receive a message on the
+        # vision/results ROS topic.  This happens periodically even if
+        # nothing is detected.  If faces are found, the msg.faces.faces array
+        # will contain information about the size and location of those faces
+
+        # *Top Tip*
+        # Use `rosmsg show vision_msgs/FrameResults` to see what the msg
+        # object looks like
 
         if msg.faces.faces:
             # This will likely get annoying quickly if you want to use ros
             # logs for any other purpose.  Uncomment to see in the logs when
             # kuri sees a face
-            rospy.loginfo("Saw Face!")
+            # rospy.loginfo("Saw Face!")
             pass
