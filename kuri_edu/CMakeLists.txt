@@ -10,7 +10,7 @@ catkin_package()
 install(PROGRAMS
   scripts/head_control
   scripts/safety_controller
-  scripts/simple_kuri
+  scripts/chest_light_controller
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

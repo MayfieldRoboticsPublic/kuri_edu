@@ -10,7 +10,7 @@ from .pulse_animation import PulseAnimation
 
 class ChestLedController(object):
 
-    CHEST_LIGHT_FRAMERATE = 10
+    CHEST_LIGHT_FRAMERATE = 15
 
     def __init__(self):
 
@@ -27,7 +27,9 @@ class ChestLedController(object):
         )
 
         self._light_client = mobile_base.ChestLightClient()
-        self._anim = PulseAnimation(self.CHEST_LIGHT_FRAMERATE)
+        self._anim = PulseAnimation(
+            framerate=self.CHEST_LIGHT_FRAMERATE
+        )
 
         # By default, we want the color of the chest light to be controlled
         # by the battery level of the robot.  Subscribe to mobile_base/power
@@ -45,7 +47,7 @@ class ChestLedController(object):
             mayfield_msgs.msg.NodeStatus("chest_light_controller", True)
         )
 
-        rate = rospy.Rate(self.CHEST_LIGHT_FRAMERATE)  # 10hz by default
+        rate = rospy.Rate(self.CHEST_LIGHT_FRAMERATE)
 
         try:
             for frame in self._anim:

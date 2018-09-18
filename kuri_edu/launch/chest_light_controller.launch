@@ -8,9 +8,9 @@ is running
 
     <arg name="cla" default=""/> <!-- Command-line arguments -->
 
-    <node name="chest_led_controller"
+    <node name="chest_light_controller"
           pkg="kuri_edu"
-          type="chest_led_controller"
+          type="chest_light_controller"
           required="true"
           args="$(arg cla)"
     />
