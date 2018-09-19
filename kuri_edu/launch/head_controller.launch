@@ -1,0 +1,16 @@
+<!--
+Launches the head controller node, which opens Kuri's eyes at startup and can
+be extended to react to bumps and faces
+-->
+
+<launch>
+
+    <arg name="cla" default=""/> <!-- Command-line arguments -->
+
+    <node name="head_controller"
+          pkg="kuri_edu"
+          type="head_controller"
+          required="true"
+          args="$(arg cla)"
+    />
+</launch>
