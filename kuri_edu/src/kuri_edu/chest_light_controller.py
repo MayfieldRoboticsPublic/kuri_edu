@@ -50,6 +50,7 @@ class ChestLedController(object):
         rate = rospy.Rate(self.CHEST_LIGHT_FRAMERATE)
 
         try:
+            # self._anim will provide frames forever
             for frame in self._anim:
                 if rospy.is_shutdown():
                     return

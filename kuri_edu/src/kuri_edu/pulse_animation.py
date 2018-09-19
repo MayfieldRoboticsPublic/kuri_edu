@@ -36,8 +36,16 @@ class PulseAnimation(LightAnimation):
     @staticmethod
     def _get_frame(on_range, color):
         '''
-        Gets an array of 0s and 1s indicating which LEDs should be lit
-        for a given frame of the animation
+        Generates a list of RGB pixels that can be sent to a
+        mobile_base.ChestLightClient object
+
+        :param on_range: A list of LED indicies that should be turned
+        on for this frame of the animation
+
+        :param color: The color of the 'on' LEDs
+
+        :return: Pixels that can be sent to a mobile_base.ChestLightClient's
+        put_pixels method
         '''
         arr = [(0,0,0)] * clc.NUM_LEDS
         for idx in on_range:
