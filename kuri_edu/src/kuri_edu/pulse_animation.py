@@ -47,7 +47,7 @@ class PulseAnimation(LightAnimation):
         :return: Pixels that can be sent to a mobile_base.ChestLightClient's
         put_pixels method
         '''
-        arr = [(0,0,0)] * clc.NUM_LEDS
+        arr = [(0, 0, 0)] * clc.NUM_LEDS
         for idx in on_range:
             arr[idx] = color
         return arr

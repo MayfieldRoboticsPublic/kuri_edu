@@ -1,7 +1,5 @@
 from kuri_edu import PulseAnimation
 
-import mobile_base
-
 import maytest
 
 

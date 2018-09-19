@@ -18,7 +18,7 @@ class TestLightAnimation(maytest.TestBase):
         # out the same color forever.
         for frame in dut:
             if idx >= 1000:
-                break;
+                break
 
             # Each frame should be 15 pixels all containing the same color:
             self.assertEqual(
@@ -30,5 +30,5 @@ class TestLightAnimation(maytest.TestBase):
 
     def test_get_framerate(self):
         for n in range(10):
-            dut = LightAnimation(framerate = n)
+            dut = LightAnimation(framerate=n)
             self.assertEquals(dut.get_framerate(), n)
