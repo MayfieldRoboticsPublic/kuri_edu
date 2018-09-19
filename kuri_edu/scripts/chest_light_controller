@@ -13,7 +13,7 @@ if __name__ == '__main__':
         import coverage
         cov = coverage.Coverage(auto_data=True)
         cov.start()
-        reload(kuri_edu.chest_led_controller)
+        reload(kuri_edu.chest_light_controller)
 
     rospy.init_node('chest_light_controller')
 
