@@ -10,7 +10,7 @@ catkin_package()
 install(PROGRAMS
   scripts/head_control
   scripts/safety_controller
-  scripts/simple_kuri
+  scripts/chest_light_controller
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
@@ -25,4 +25,5 @@ if(CATKIN_ENABLE_TESTING)
 
   add_rostest(rostest/test_safety_controller.launch)
   add_rostest(rostest/test_head_controller.launch)
+  add_rostest(rostest/test_chest_light_controller.launch)
 endif()

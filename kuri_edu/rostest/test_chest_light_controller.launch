@@ -1,0 +1,19 @@
+<launch>
+
+    <!-- Start Kuri in an empty world-->
+    <include file="$(find gizmo_gazebo)/launch/gizmo_sim.launch">
+        <arg name="gui" value="false"/>
+    </include>
+
+    <!-- The node that's being tested: -->
+    <include file="$(find kuri_edu)/launch/chest_light_controller.launch">
+        <arg name="cla" value="coverage"/>
+    </include>
+
+    <test test-name="test_chest_light_controller"
+          pkg="kuri_edu"
+          time-limit="300"
+          type="test_chest_light_controller.py"
+          cwd="node"/>
+
+</launch>
