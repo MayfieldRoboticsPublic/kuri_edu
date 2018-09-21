@@ -25,4 +25,5 @@ if(CATKIN_ENABLE_TESTING)
 
   add_rostest(rostest/test_safety_controller.launch)
   add_rostest(rostest/test_head_controller.launch)
+  add_rostest(rostest/test_chest_light_controller.launch)
 endif()
