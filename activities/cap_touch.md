@@ -19,6 +19,10 @@ location where the capacitive touch sensor is active.
               [9]       [8]
 ```
 
+The capacitive touch sensor information is contained in the ROS topic
+`/mobile_base/touch`. This topic outputs a list of 8 booleans corresponding
+to each of the 8 electrodes.
+
 ```
     Electrode indices are as follows (if looking at the top of the robot's
     head):
