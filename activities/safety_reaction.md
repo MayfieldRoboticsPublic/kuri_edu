@@ -31,7 +31,7 @@ Some tips:
   - Create a new file kuri_edu/src/kuri_edu/dock_monitor.py that contains a
 DockMonitor class.  This class can subscribe to the /mobile_base/power topic 
 and keep track of the latest value of `dock_present`
-  - Add the DockMOnitor class tokuri_edu/src/kuri_edu/\_\_init\_\_.py so it
+  - Add the DockMOnitor class to `kuri_edu/src/kuri_edu/__init__.py` so it
 can be imported by tests
   - Instantiate the DockMonitor in the SafetyController `__init__` method  
   - Shut down the DockMonitor in the SafetyController `shutdown` method
