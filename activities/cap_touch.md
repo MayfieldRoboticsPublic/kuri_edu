@@ -3,6 +3,12 @@
 This activity modifies kuri_edu/src/kuri_edu/cap_touch_chest_light.py to
 make kuri display a different animation when charging on the dock
 
+**Note** This activity uses a different launch file than some of the other
+activities.  Launch this example with
+```
+roslaunch kuri_edu cap_touch_chest_light.launch
+```
+
 ### Background
 
 The default behavior of the chest LED is to illuminate white in the approximate
