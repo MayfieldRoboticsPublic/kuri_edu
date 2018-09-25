@@ -4,7 +4,6 @@ import rospy
 
 import threading
 
-import gizmo_hw_sim.srv
 import mobile_base_driver.msg
 import mayfield_utils
 import maytest.desktop
@@ -13,7 +12,6 @@ import maytest.desktop
 class LightMonitor(object):
     '''
     Look at the chest LED topic and record the messages as they come in.
-    Also provide mechanisms for waiting for messages to come in     
     '''
     def __init__(self):
         self._msgs = []
@@ -37,6 +35,7 @@ class LightMonitor(object):
         assert self._event.wait(timeout)
         self._event.clear()
         return self._msgs[-1]
+
 
 class TestCapTouchChestLight(maytest.desktop.RosTestBase):
 
@@ -86,8 +85,8 @@ class TestCapTouchChestLight(maytest.desktop.RosTestBase):
         # assertion, but we want it to still be true if different
         # patterns are implemented
         for led in lights.leds:
-            if led != mobile_base_driver.msg.Led(0,0,0):
-                break;
+            if led != mobile_base_driver.msg.Led(0, 0, 0):
+                break
         else:
             self.assertTrue(False, "Did not find any lit LEDs")
 
