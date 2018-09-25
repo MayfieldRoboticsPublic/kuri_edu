@@ -1,0 +1,23 @@
+<launch>
+
+    <!-- Start Kuri in an empty world.  We don't actually need the sim for
+         this test, except that the node under test waits for the controllers
+         to start up -->
+    <include file="$(find gizmo_gazebo)/launch/gizmo_sim.launch">
+        <arg name="gui" value="false"/>
+    </include>
+
+    <!-- The node that's being tested: -->
+    <node name="cap_touch_chest_light"
+          pkg="kuri_edu"
+          type="cap_touch_chest_light"
+          required="true"
+          args="coverage"/>
+
+    <test test-name="test_cap_touch_chest_light"
+          pkg="kuri_edu"
+          time-limit="300"
+          type="test_cap_touch_chest_light.py"
+          cwd="node"/>
+
+</launch>
