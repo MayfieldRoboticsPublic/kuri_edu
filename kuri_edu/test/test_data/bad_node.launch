@@ -1,0 +1,11 @@
+<!--
+This launch file tries to launch a non-existent node
+-->
+
+<launch>
+
+    <node name="test_launch_file"
+          pkg="kuri_edu"
+          type="zazzlefraz"/>
+
+</launch>
