@@ -38,6 +38,12 @@ set -u
 catkin_make run_tests -j1 --source .
 catkin_test_results
 
+echo -e "\nBuilding kuri_edu install-space package"
+# Double check that we can catkin_make install.  This needs to be
+# done after tests, otherwise some of our tests will find multiple
+# kuri_edu packages
+catkin_make install --source .
+
 echo -e "\nCoverage Report:"
 # Glue together the .coverage files from different locations:
 # If a node generates its own coverage and was run in a ROS test, its numbers
