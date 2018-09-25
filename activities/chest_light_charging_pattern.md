@@ -15,7 +15,7 @@ PulseAnimation object by default.  This animation contains four frames
 that make it look like the chest light is growing and then shrinking.
 
 ```
-    LED indeces are as follows (if looking at the robot straight on):
+    LED indices are as follows (if looking at the robot straight on):
              [12]       [13]
         [11]                 [14]
                 [4]   [5]

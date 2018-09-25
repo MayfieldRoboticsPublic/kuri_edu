@@ -1,0 +1,16 @@
+<!--
+This is a stand-alone launch file which launches a node that controls
+Kuri's chest light with the head cap touch sensor
+-->
+
+<launch>
+
+    <include file="$(find mobile_base_driver)/launch/kuri_drive.launch"/>
+
+    <node name="cap_touch_chest_light"
+          pkg="kuri_edu"
+          type="cap_touch_chest_light"
+          required="true"
+    />
+
+</launch>

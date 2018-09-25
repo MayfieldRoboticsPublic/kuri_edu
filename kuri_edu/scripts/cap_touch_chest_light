@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+import sys
+
+import rospy
+
+import kuri_edu
+
+if __name__ == '__main__':
+
+    # If the script was run with 'coverage' we're going to run the python
+    # coverage module to generate line coverage
+    if "coverage" in sys.argv:
+        import coverage
+        cov = coverage.Coverage(auto_data=True)
+        cov.start()
+        reload(kuri_edu.cap_touch_chest_light)
+
+    rospy.init_node('cap_touch_chest_light')
+
+    cap_touch_chest_light = kuri_edu.CapTouchChestLed()
+
+    try:
+        cap_touch_chest_light.run()
+    finally:
+        cap_touch_chest_light.shutdown()
+        if 'cov' in locals():
+            cov.stop()
