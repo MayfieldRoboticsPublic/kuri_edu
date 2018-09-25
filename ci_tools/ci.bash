@@ -30,6 +30,8 @@ set -u
 
 echo -e "\nBuilding kuri_edu package"
 catkin_make --source .
+# Double check that we can catkin_make install
+catkin_make install --source .
 
 echo -e "\nRunning Tests"
 set +u  # Ugh. . .
