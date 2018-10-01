@@ -8,6 +8,7 @@ from .safety_controller import SafetyController
 from .light_animation import LightAnimation
 from .pulse_animation import PulseAnimation
 
+from .joystick_teleop import Joystick
 
 __all__ = [
     CapTouchChestLed,
@@ -18,4 +19,6 @@ __all__ = [
     # Library Classes
     LightAnimation,
     PulseAnimation,
+
+    Joystick,
 ]

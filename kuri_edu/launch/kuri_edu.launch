@@ -22,4 +22,7 @@ software package to experiment with their own robot behaviors
     <include file="$(find kuri_edu)/launch/head_controller.launch"/> 
     <include file="$(find kuri_edu)/launch/chest_light_controller.launch"/> 
 
+    <!-- Joystick control -->
+    <include file="$(find kuri_edu)/launch/joystick_teleop.launch"/>
+
 </launch>

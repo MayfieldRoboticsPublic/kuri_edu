@@ -12,6 +12,7 @@ install(PROGRAMS
   scripts/chest_light_controller
   scripts/head_controller
   scripts/safety_controller
+  scripts/jotstick_teleop
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
