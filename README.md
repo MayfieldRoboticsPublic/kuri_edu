@@ -4,6 +4,10 @@ educational purposes.  The kuri_edu folder contains a ROS package that provides
 a minimal running robot framework and the activities folder contains ideas and
 instructions for extending the robot behavior
 
+Note that the kuri_edu package is not stand-alone.  It expects to overlay
+a binary install on the Kuri robot - either `/opt/gizmo` or `/opt/edu` will
+contain the kuri_edu dependencies.
+
 ## Stand-alone launch Files
  * kuri_edu.launch: Launches Kuri, and the nodes required to operate Kuri with 
 minimal autonomous behavior.  This launch file glues together several other launch files:
@@ -16,10 +20,13 @@ Before attempting any activities, you should make sure you're able to launch the
 kuri EDU software without any modifications.
 
 Start by establishing an SSH connection to Kuri
-`ssh mayfield@kuri-SERIAL_NUMBER`
+`ssh mayfield@kuri_hostname`
 
-To set up your shell, source the setup.sh or setup.bash files in the kuri EDU
-package
+Where kuri_hostname is probably `kuri-LAST_7_DIGITS_OF_SERIAL_NUMBER`
+
+To set up your shell, source the setup.sh or setup.bash files in the installed
+kuri EDU binary
+
 `source /opt/edu/setup.sh`
 
 Finally, launch the kuri_edu software
@@ -65,6 +72,9 @@ sudo apt-get update
 sudo apt-get install ros-indigo-teleop-twist-keyboard
 ```
 
+See the Troubleshooting section below if you're having trouble installing
+the teleop twist keyboard package
+
 Next, you'll need to start the kuri_edu software and the keyboard teleop node. 
 You can do this using two different terminals SSH'd to Kuri, or you can
 SSH to kuri and run `tmux` to multiplex your terminals, or you can run
@@ -103,7 +113,14 @@ Reading state information... Done
 E: Unable to locate package ros-indigo-teleop-twist-keyboard
 ```
 
-You may need to add the ROS indigo debian sources to your robot.
+You may need to add the ROS indigo debian sources to your robot.  If the
+`/etc/apt/sources.list.d` folder does not exist, create it with
+
+```
+sudo mkdir -p /etc/apt/sources.list.d
+```
+
+Then
 
 ```
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
