@@ -17,19 +17,25 @@ import mobile_base
 
 monitor = mobile_base.SafetyMonitor()
 
-# You can poll for safety status like this:
-latest_status = monitor.get_safety_status()
-if latest_status:
-    # Do a reaction
-
-# You can also hook up a callback method that will be called
-# when a new safety status happens
+# You can hook up a callback method that will be called
+# when a new safety status happens:
 
 def safety_status_callback(status):
-    # Do a reaction
+    ```
+    Status is a list of safety sensors that triggered the reaction.
+    "BPR_bp" = Right Bump
+    "BPM_bp" = Middle Bump
+    "BPL_bp" = Left Bump
+    ```
+    if "BPR_bp" in status:
+        # Do a reaction . . .
 
 monitor.safety_event.connect(safety_status_callback)
 ```
+It helps communicate why kuri is reacting if the robot looks towards the
+direction that the bump came from
+![left bump](Left-Bump.png)
+![right bump](Right-Bump.png)
 
 The head controller uses the HeadClient.pan_and_tilt method to send
 the head to a specific point at startup, but the HeadClient also has
