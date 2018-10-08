@@ -34,8 +34,8 @@ monitor.safety_event.connect(safety_status_callback)
 ```
 It helps communicate why kuri is reacting if the robot looks towards the
 direction that the bump came from
-![left bump](Left-Bump.png)
-![right bump](Right-Bump.png)
+![left bump](img/Left-Bump.png)
+![right bump](img/Right-Bump.png)
 
 The head controller uses the HeadClient.pan_and_tilt method to send
 the head to a specific point at startup, but the HeadClient also has
