@@ -52,8 +52,10 @@ class ChestLedController(object):
         try:
             # self._anim will provide frames forever
             for frame in self._anim:
+                if rospy.is_shutdown():
+                    return
                 self._light_client.put_pixels(frame)
-                rate.sleep()  # This will raise an exception on shutdown
+                rate.sleep()
         except rospy.exceptions.ROSInterruptException:
             return
 
