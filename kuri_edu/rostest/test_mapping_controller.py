@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import threading
+import math
 
 import rostest
 import rospy
@@ -7,7 +7,7 @@ import rospy
 import geometry_msgs.msg
 
 import mobile_base
-import mobile_base_driver.msg
+import nav_msgs.msg
 import oort_msgs.srv
 
 import gizmo_hw_sim.srv
@@ -27,7 +27,7 @@ class TestMappingController(maytest.desktop.RosTestBase):
             "/cmd_vel",
             geometry_msgs.msg.Twist,
             latch=True,
-            queue_size=2,
+            queue_size=1,
         )
 
         cls.map_state_srv = rospy.ServiceProxy(
@@ -89,6 +89,77 @@ class TestMappingController(maytest.desktop.RosTestBase):
             self.joints.get_eye_pos(),
             mobile_base.HeadClient.EYES_CLOSED
         )
+
+    def test_03_moving_grows_map(self):
+
+        initial_orientation = self.get_gizmo_orientation()
+
+        # Going to turn left, then right to build up map
+        self.dock_srv(is_docked=False, is_charging=False)
+        poses = [
+            (0.3, initial_orientation + math.pi / 2),
+            (-0.3, initial_orientation - math.pi / 2),
+        ]
+
+        for rate, pose in poses:
+            initial_map = rospy.wait_for_message(
+                "/map",
+                nav_msgs.msg.OccupancyGrid
+            )
+
+            self._turn_to(rate, pose)
+
+            final_map = rospy.wait_for_message(
+                "/map",
+                nav_msgs.msg.OccupancyGrid
+            )
+
+            self.assertGreater(
+                self.get_mapped_area(final_map),
+                self.get_mapped_area(initial_map),
+            )
+
+        # Get back to center for the next test
+        self._turn_to(0.3, initial_orientation)
+
+    def test_04_docking_completes_map(self):
+        # We'll just key off of 'is_docked'  Charging doesn't matter
+        self.dock_srv(is_docked=True, is_charging=False)
+
+        rate = rospy.Rate(4)
+        # Wait for mapping to start
+        for _ in range(20):
+            if self.map_state_srv().data == "not_mapping":
+                break
+            rate.sleep()
+        else:
+            self.assertTrue(False, "Timed out waiting for mapping to stop")
+
+
+    def _turn_to(self, turn_rate, final_orientation):
+        r = rospy.Rate(10)
+
+        while abs(final_orientation - self.get_gizmo_orientation()) > 0.1:
+            self.vel_pub.publish(
+                geometry_msgs.msg.Twist(
+                    linear=geometry_msgs.msg.Vector3(0, 0, 0),
+                    angular=geometry_msgs.msg.Vector3(0, 0, turn_rate)
+                )
+            )
+            r.sleep()
+
+        # Stop turning
+        self.vel_pub.publish(
+            geometry_msgs.msg.Twist(
+                linear=geometry_msgs.msg.Vector3(0, 0, 0),
+                angular=geometry_msgs.msg.Vector3(0, 0, 0)
+            )
+        )
+
+    @staticmethod
+    def get_mapped_area(map_msg):
+        filled_pixels = sum(d == 0 for d in map_msg.data)
+        return filled_pixels * map_msg.info.resolution
 
 
 if __name__ == '__main__':

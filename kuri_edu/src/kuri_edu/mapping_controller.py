@@ -35,6 +35,8 @@ class MappingController(object):
         self._power_monitor = None  # Created when we start to run
         self._map_manager = MapManager()
 
+        self._mapping_complete = False
+
         # Make sure the head client is ready to be used
         assert self._head_client.wait_for_server(timeout=rospy.Duration(30.0))
 
@@ -63,8 +65,17 @@ class MappingController(object):
         )
 
         try:
-            rospy.spin()
-        except rospy.exceptions.ROSInterruptExcepion:
+            while not rospy.is_shutdown():
+                if self._mapping_complete:
+                    # Telling OORT to close off the map can be a time
+                    # consuming process, so we're doing it from the main
+                    # thread instead of from a ROS callback
+                    self._map_manager.stop_mapping()
+                    rospy.logwarn("Mapping complete")
+                    rospy.spin()  # Hang until shutdown
+                    return
+                rospy.sleep(0.5)
+        except rospy.exceptions.ROSInterruptException:
             return
 
     def shutdown(self):
@@ -86,9 +97,16 @@ class MappingController(object):
         map
         '''
 
-        if msg.dock_present and self._map_manager.get_map_state:
-            if self._map_manager.get_map_state() == "not_mapping":
+        # Early-out.  If we've already mapped, we're all done here
+        if self._mapping_complete:
+            return
+
+        if msg.dock_present:
+            map_state = self._map_manager.get_map_state()
+            if map_state == "not_mapping":
                 self._start_mapping()
+            elif map_state == "mapping":
+                self._stop_mapping()
 
     def _start_mapping(self):
         '''
@@ -109,3 +127,24 @@ class MappingController(object):
         assert self._head_client.wait_for_done(5.0), "head client timed out"
 
         self._map_manager.start_mapping()
+
+    def _stop_mapping(self):
+        '''
+        At the end of mapping, put the head back down and close off the map
+        '''
+
+        self._head_client.pan_and_tilt(
+            pan=HeadClient.PAN_NEUTRAL,
+            tilt=HeadClient.TILT_DOWN,
+            duration=1.0
+        )
+        self._head_client.eyes_to(
+            radians=HeadClient.EYES_CLOSED,
+            duration=0.5
+        )
+
+        assert self._head_client.wait_for_done(5.0), "head client timed out"
+
+        # Telling OORT to finish off the map is time consuming.  We'll do that
+        # from the main thread
+        self._mapping_complete = True
