@@ -11,6 +11,7 @@ install(PROGRAMS
   scripts/cap_touch_chest_light
   scripts/chest_light_controller
   scripts/head_controller
+  scripts/mapping_controller
   scripts/safety_controller
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
