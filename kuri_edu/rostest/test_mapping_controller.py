@@ -122,6 +122,12 @@ class TestMappingController(maytest.desktop.RosTestBase):
         # Get back to center for the next test
         self._turn_to(0.3, initial_orientation)
 
+        # Make sure kuri is smiling
+        self.assertLess(
+            self.joints.get_eye_pos(),
+            mobile_base.HeadClient.EYES_OPEN
+        )
+
     def test_04_docking_completes_map(self):
         # We'll just key off of 'is_docked'  Charging doesn't matter
         self.dock_srv(is_docked=True, is_charging=False)

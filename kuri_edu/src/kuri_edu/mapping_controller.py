@@ -34,6 +34,7 @@ class MappingController(object):
 
         self._power_monitor = None  # Created when we start to run
         self._map_manager = MapManager()
+        self._map_manager.onMapGrew.connect(self._map_grew)
 
         self._mapping_complete = False
 
@@ -107,6 +108,16 @@ class MappingController(object):
                 self._start_mapping()
             elif map_state == "mapping":
                 self._stop_mapping()
+
+    def _map_grew(self, map_size):
+        '''
+        Makes kuri smile once the map is big enough
+        '''
+        if map_size > 20:
+            self._head_client.eyes_to(
+                radians=HeadClient.EYES_HAPPY,
+                duration=0.25
+            )
 
     def _start_mapping(self):
         '''
