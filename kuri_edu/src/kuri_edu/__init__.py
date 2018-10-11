@@ -7,6 +7,8 @@ from .safety_controller import SafetyController
 
 # Library Classes
 from .light_animation import LightAnimation
+from .map_manager import MapManager
+from .power_monitor import PowerMonitor
 from .pulse_animation import PulseAnimation
 
 
@@ -19,5 +21,7 @@ __all__ = [
 
     # Library Classes
     LightAnimation,
+    MapManager,
+    PowerMonitor,
     PulseAnimation,
 ]
