@@ -1,0 +1,35 @@
+<launch>
+
+    <!-- Start in a world with walls so we can map --> 
+    <include file="$(find gizmo_gazebo)/launch/gizmo_sim.launch">
+        <arg name="gui" value="false"/>
+        <arg name="world" value="rtc_lab_small_sim"/>
+        <!-- Start kuri in the big room in the sim -->
+        <arg name="x" default="-4.5"/>
+        <arg name="y" default="-5.4"/>
+    </include>
+
+    <!-- Nodes used for mapping -->
+    <node name="oort_ros_mapping"
+          pkg="oort"
+          type="oort_ros"
+          launch-prefix="nice -n 10"
+          required="true">
+        <remap from="scan" to="scan_reduced_mapping"/>
+    </node>
+    <include file="$(find gizmo_ros_navigation)/launch/amcl.launch"/>
+
+    <include file="$(find kuri_edu)/launch/safety_controller.launch"/> 
+
+    <!-- The node that's being tested: -->
+    <include file="$(find kuri_edu)/launch/mapping_controller.launch"> 
+        <arg name="cla" value="coverage"/>
+    </include>
+
+    <test test-name="test_mapping_controller"
+          pkg="kuri_edu"
+          time-limit="300"
+          type="test_mapping_controller.py"
+          cwd="node"/>
+
+</launch>
