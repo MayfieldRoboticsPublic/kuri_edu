@@ -10,6 +10,31 @@ from .power_monitor import PowerMonitor
 
 
 class MappingController(object):
+    '''
+    The mapping controller node allows you to create a map using kuri's
+    mapping system, OORT.
+
+    Mapping will start once Kuri detects its on the dock.  The eyes will open
+    and Kuri will look forward as an indication that mapping is started
+
+    The user then drives Kuri using the keyboard teleop node.
+
+    You can monitor the progress of mapping using a tool like rviz.  When the
+    map reaches 20 squre meters, Kuri will start to smile.
+
+    To stop mapping, driver Kuri back onto the dock.  Kuri's eyes will close
+    and the head will go down.  The map will be saved to the user's home
+    directory:
+
+    ~/oort_maps/<uuid>/map.map_capnp      - OORT map file
+    ~/oort_maps/<uuid>/map.map_meta_capnp - OORT map file
+    ~/oort_maps/<uuid>/map.md5            - OORT map file checksum
+    ~/oort_maps/<uuid>/map.pgm            - map_saver output (standard format)
+    ~/oort_maps/<uuid>/map.yaml           - map_saver output (standard format)
+
+    A different UUID will be used each time the mapping_controller creates a
+    new map
+    '''
 
     def __init__(self):
 
@@ -64,6 +89,11 @@ class MappingController(object):
         self._power_monitor = PowerMonitor(
             dock_changed_cb=self._dock_changed_cb
         )
+
+        # _start_mapping and _stop_mapping are called from ROS callbacks
+        # once _stop mapping runs, it will set self._mapping_complete
+        # to True.  At this point, the main loop below will save the map
+        # in a standard format, and then stop
 
         try:
             while not rospy.is_shutdown():
