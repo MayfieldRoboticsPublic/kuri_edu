@@ -154,6 +154,19 @@ class TestMappingController(maytest.desktop.RosTestBase):
         else:
             self.assertTrue(False, "Timed out waiting for mapping to stop")
 
+    def test_05_only_map_once(self):
+        # Make sure going off the dock and back on doesn't result in starting
+        # mapping again, otherwise bumping the dock might erase the work
+        # we've done to create this map
+
+        self.dock_srv(is_docked=False, is_charging=False)
+        rospy.sleep(1.0)
+        self.dock_srv(is_docked=True, is_charging=False)
+        rospy.sleep(1.0)
+        self.assertEquals(
+            self.map_state_srv().data,
+            "not_mapping"
+        )
 
     def _turn_to(self, turn_rate, final_orientation):
         r = rospy.Rate(10)
