@@ -1,10 +1,13 @@
+import uuid
+import os
+import subprocess
+
 import rospy
 
 import nav_msgs.msg
 import std_srvs.srv
 
 import oort_msgs.srv
-
 import mayfield_utils
 
 
@@ -14,6 +17,7 @@ class MapManager(object):
 
     def __init__(self):
 
+        self._map_path = None
         self._map_size = 0
 
         self._mapping_state_srv = rospy.ServiceProxy(
@@ -37,11 +41,35 @@ class MapManager(object):
             self._map_cb
         )
 
+    def convert_map(self):
+        assert self._map_path, "Mapping not started.  No map to convert"
+
+        subprocess.check_call(
+            ["rosrun", "map_server", "map_saver"],
+            cwd=self._map_path
+        )
+
     def get_map_state(self):
         return self._mapping_state_srv().data
 
     def start_mapping(self):
-        self._mapping_start_srv("")
+        '''
+        Starts OORT mapping and returns the full path to the saved map data
+        '''
+        map_path = os.path.join(
+            os.path.expanduser("~"),
+            "oort_maps",
+            str(uuid.uuid4())
+        )
+        os.makedirs(map_path)  # Recursive
+
+        # OORT node will drop a few files in the map_path directory:
+        # - map.map_capnp
+        # - map.map_meta_capnp
+        # - map.md5
+        self._mapping_start_srv(os.path.join(map_path, "map"))
+        self._map_path = map_path
+        return map_path
 
     def stop_mapping(self):
         self._mapping_stop_srv()

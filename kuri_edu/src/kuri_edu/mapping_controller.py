@@ -72,7 +72,9 @@ class MappingController(object):
                     # consuming process, so we're doing it from the main
                     # thread instead of from a ROS callback
                     self._map_manager.stop_mapping()
-                    rospy.logwarn("Mapping complete")
+                    rospy.logwarn("Mapping complete.  Converting. . .")
+                    self._map_manager.convert_map()
+                    rospy.logwarn("Map conversion complete")
                     rospy.spin()  # Hang until shutdown
                     return
                 rospy.sleep(0.5)
@@ -137,7 +139,9 @@ class MappingController(object):
 
         assert self._head_client.wait_for_done(5.0), "head client timed out"
 
-        self._map_manager.start_mapping()
+        map_path = self._map_manager.start_mapping()
+        # This is a warning so it's easier to see in the log
+        rospy.logwarn("Started mapping.  Map stored at {}".format(map_path))
 
     def _stop_mapping(self):
         '''

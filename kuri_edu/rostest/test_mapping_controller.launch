@@ -1,5 +1,8 @@
 <launch>
 
+    <!-- This test writes files to disk.  Provision a temp home directory -->
+    <arg name="home_dir" value="/tmp/$(anon home)"/>
+
     <!-- Start in a world with walls so we can map --> 
     <include file="$(find gizmo_gazebo)/launch/gizmo_sim.launch">
         <arg name="gui" value="false"/>
@@ -24,7 +27,12 @@
     <!-- The node that's being tested: -->
     <include file="$(find kuri_edu)/launch/mapping_controller.launch"> 
         <arg name="cla" value="coverage"/>
+        <env name="HOME" value="$(arg home_dir)"/>
     </include>
+
+    <!-- Store the home directory as a ROS parameter so the test can use it -->
+    <param name="integration_test/home_directory"
+           command="$(find kuri_edu)/rostest/mkdir.bash $(arg home_dir)" />
 
     <test test-name="test_mapping_controller"
           pkg="kuri_edu"

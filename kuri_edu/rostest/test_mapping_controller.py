@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import math
+import os.path
 
 import rostest
 import rospy
@@ -68,6 +69,12 @@ class TestMappingController(maytest.desktop.RosTestBase):
         # Check that placing Kuri on the dock will open the eyes, raise
         # the head, and start mapping
 
+        expected_map_dir = os.path.join(
+            rospy.get_param("integration_test/home_directory"),
+            "oort_maps"
+        )
+        self.assertFalse(os.path.isdir(expected_map_dir))
+
         # We'll just key off of 'is_docked'  Charging doesn't matter
         self.dock_srv(is_docked=True, is_charging=False)
 
@@ -88,6 +95,12 @@ class TestMappingController(maytest.desktop.RosTestBase):
         self.assertLess(
             self.joints.get_eye_pos(),
             mobile_base.HeadClient.EYES_CLOSED
+        )
+
+        # Check to see that we're creating map files where we expect
+        self.assertTrue(
+            os.path.isdir(expected_map_dir),
+            "Did not find {}".format(expected_map_dir)
         )
 
     def test_03_moving_grows_map(self):
