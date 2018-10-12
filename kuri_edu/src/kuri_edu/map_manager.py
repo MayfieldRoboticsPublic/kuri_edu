@@ -20,6 +20,11 @@ class MapManager(object):
         self._map_path = None
         self._map_size = 0
 
+        self._graph_loc_create_srv = rospy.ServiceProxy(
+            "oort_ros_mapping/graph_loc/create",
+            oort_msgs.srv.LocCreate
+        )
+
         self._mapping_state_srv = rospy.ServiceProxy(
             "oort_ros_mapping/map/state",
             oort_msgs.srv.GetString
@@ -32,6 +37,11 @@ class MapManager(object):
 
         self._mapping_stop_srv = rospy.ServiceProxy(
             "oort_ros_mapping/map/stop",
+            std_srvs.srv.Empty
+        )
+
+        self._notify_dock_srv = rospy.ServiceProxy(
+            "oort_ros_mapping/map/notify_docked",
             std_srvs.srv.Empty
         )
 
@@ -51,6 +61,12 @@ class MapManager(object):
 
     def get_map_state(self):
         return self._mapping_state_srv().data
+
+    def notify_docked(self):
+        self._notify_dock_srv()
+
+    def save_waypoint(self, nspace, wp_name):
+        self._graph_loc_create_srv(nspace, wp_name)
 
     def start_mapping(self):
         '''

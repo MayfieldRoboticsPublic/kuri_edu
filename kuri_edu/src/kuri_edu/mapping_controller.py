@@ -170,6 +170,10 @@ class MappingController(object):
         assert self._head_client.wait_for_done(5.0), "head client timed out"
 
         map_path = self._map_manager.start_mapping()
+        # "dock" is a reserved waypoint name in OORT.  It's used for loop
+        # closures as the map is added to
+        self._map_manager.save_waypoint("dock", "dock")
+
         # This is a warning so it's easier to see in the log
         rospy.logwarn("Started mapping.  Map stored at {}".format(map_path))
 
@@ -190,6 +194,9 @@ class MappingController(object):
 
         assert self._head_client.wait_for_done(5.0), "head client timed out"
 
+        # Notifying OORT that we're docked will give it a hint about how to do
+        # the final loop closure
+        self._map_manager.notify_docked()
         # Telling OORT to finish off the map is time consuming.  We'll do that
         # from the main thread
         self._mapping_complete = True
