@@ -1,0 +1,16 @@
+<!--
+Launches a node which implements a simple state machine that lets the user
+complete mapping
+-->
+
+<launch>
+
+    <arg name="cla" default=""/> <!-- Command-line arguments -->
+
+    <node name="mapping_controller"
+          pkg="kuri_edu"
+          type="mapping_controller"
+          required="true"
+          args="$(arg cla)"
+    />
+</launch>

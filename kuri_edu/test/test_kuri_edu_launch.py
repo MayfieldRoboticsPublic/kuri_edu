@@ -44,6 +44,11 @@ def test_launch_files():
     launch_path = os.path.join(pkg_path, "launch")  # ./kuri_edu/launch
 
     for fn in os.listdir(launch_path):
+        # A bit annoying:  If we're editing launch files and running the
+        # test, there will be swp files in here.  Exclude them
+        if ".launch.swp" in fn:
+            continue
+
         # For every file, emit a test to check that file
         def test_func(name): check_launch_file(name)
         test_func.description = "test_launch_file {}".format(fn)
