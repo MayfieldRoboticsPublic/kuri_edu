@@ -24,7 +24,7 @@
     <include file="$(find kuri_edu)/launch/safety_controller.launch"/> 
 
     <!-- The node that's being tested: -->
-    <include file="$(find kuri_edu)/launch/mapping_controller.launch"> 
+    <include file="$(find kuri_edu)/launch/nav_controller.launch"> 
         <arg name="cla" value="coverage"/>
         <env name="HOME" value="$(arg home_dir)"/>
     </include>
@@ -33,10 +33,10 @@
     <param name="integration_test/home_directory"
            command="$(find kuri_edu)/rostest/mkdir.bash $(arg home_dir)" />
 
-    <test test-name="test_mapping_controller"
+    <test test-name="test_nav_controller"
           pkg="kuri_edu"
           time-limit="300"
-          type="test_mapping_controller.py"
+          type="test_nav_controller.py"
           cwd="node"/>
 
 </launch>

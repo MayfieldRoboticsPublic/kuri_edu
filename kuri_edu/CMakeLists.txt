@@ -12,6 +12,7 @@ install(PROGRAMS
   scripts/chest_light_controller
   scripts/head_controller
   scripts/mapping_controller
+  scripts/nav_controller
   scripts/safety_controller
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
@@ -28,6 +29,7 @@ if(CATKIN_ENABLE_TESTING)
   add_rostest(rostest/test_cap_touch_chest_light.launch)
   add_rostest(rostest/test_chest_light_controller.launch)
   add_rostest(rostest/test_head_controller.launch)
+  add_rostest(rostest/test_nav_controller.launch)
   add_rostest(rostest/test_mapping_controller.launch)
   add_rostest(rostest/test_safety_controller.launch)
 endif()

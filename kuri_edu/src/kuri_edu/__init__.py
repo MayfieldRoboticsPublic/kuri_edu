@@ -3,6 +3,7 @@ from .cap_touch_chest_light import CapTouchChestLed
 from .chest_light_controller import ChestLedController
 from .head_controller import HeadController
 from .mapping_controller import MappingController
+from .nav_controller import NavController
 from .safety_controller import SafetyController
 
 # Library Classes
@@ -16,6 +17,7 @@ __all__ = [
     CapTouchChestLed,
     ChestLedController,
     MappingController,
+    NavController,
     HeadController,
     SafetyController,
 
