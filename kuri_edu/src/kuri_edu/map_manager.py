@@ -25,6 +25,11 @@ class MapManager(object):
             oort_msgs.srv.LocCreate
         )
 
+        self._map_load_srv = rospy.ServiceProxy(
+            "oort_ros_mapping/map/load",
+            oort_msgs.srv.SetString
+        )
+
         self._mapping_state_srv = rospy.ServiceProxy(
             "oort_ros_mapping/map/state",
             oort_msgs.srv.GetString
@@ -62,6 +67,20 @@ class MapManager(object):
     def get_map_state(self):
         return self._mapping_state_srv().data
 
+    def load_map(self, map_path):
+        '''
+        Loads an existing OORT map
+
+        :param map_path: A full path to the map.map_map_capnp file to load 
+        '''
+        # Need to resolve simlinks, or OORT will look for the md5 in the wrong
+        # place.  We also need to remove the file extension before we give the
+        # path to OORT
+        map_path = os.path.realpath(map_path)
+        if ".map_capnp" in map_path:
+            map_path = os.path.splitext(map_path)[0]
+        self._map_load_srv(map_path)
+
     def notify_docked(self):
         self._notify_dock_srv()
 
@@ -71,6 +90,8 @@ class MapManager(object):
     def start_mapping(self):
         '''
         Starts OORT mapping and returns the full path to the saved map data
+
+        :returns: A path to the directory used to store the map
         '''
         map_path = os.path.join(
             os.path.expanduser("~"),

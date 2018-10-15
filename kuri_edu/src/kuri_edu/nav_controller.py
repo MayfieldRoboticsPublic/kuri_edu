@@ -43,7 +43,7 @@ class NavController(object):
         map.  If there is, have OORT load it, and start AMCL localization
         '''
         if os.path.isfile(NavController.MAP_PATH):
-            rospy.logerr("Good")
+            self._map_manager.load_map(NavController.MAP_PATH)
         else:
             # If we didn't find a map, that may be OK.  The user may not have
             # created one yet.
