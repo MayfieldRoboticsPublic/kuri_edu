@@ -30,8 +30,10 @@
     </include>
 
     <!-- Store the home directory as a ROS parameter so the test can use it -->
+    <!-- The first argument will create the home directory.  The 2nd argument
+         source of artifacts to copy into the home directory -->
     <param name="integration_test/home_directory"
-           command="$(find kuri_edu)/rostest/mkdir.bash $(arg home_dir)" />
+           command="$(find kuri_edu)/rostest/mkdir.bash $(arg home_dir) $(find kuri_edu)/rostest/test_data/home_directory_1" />
 
     <test test-name="test_nav_controller"
           pkg="kuri_edu"

@@ -1,3 +1,5 @@
+import os.path
+
 import rospy
 
 import mayfield_msgs.msg
@@ -15,6 +17,8 @@ class NavController(object):
     class will look in the home directory for a simlink to a map created
     with kuri_mapping.launch and attempt to load it and start localization
     '''
+
+    MAP_PATH = os.path.expanduser("~/map.map_capnp")
 
     def __init__(self):
 
@@ -34,6 +38,19 @@ class NavController(object):
 
 
     def run(self):
+        '''
+        Look in the home directory to see if there's a simlink to an active
+        map.  If there is, have OORT load it, and start AMCL localization
+        '''
+        if os.path.isfile(NavController.MAP_PATH):
+            rospy.logerr("Good")
+        else:
+            # If we didn't find a map, that may be OK.  The user may not have
+            # created one yet.
+            # See kuri_mapping.launch and the assosciated activity to see how
+            # to create a map
+            rospy.logwarn("Did not find a simlink to a map file at ~/map.map_capnp")
+
 
         # Indicate to the world that we're running and ready to go:
         self._pub.publish(
