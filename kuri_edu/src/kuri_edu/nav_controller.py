@@ -45,6 +45,9 @@ class NavController(object):
         if os.path.isfile(NavController.MAP_PATH):
             self._map_manager.load_map(NavController.MAP_PATH)
             self._map_manager.start_localization()
+            # Assume that on start-up we're on or near the dock.  It's as good
+            # a guess as any. . .
+            self._map_manager.localize_on_dock()
         else:
             # If we didn't find a map, that may be OK.  The user may not have
             # created one yet.
