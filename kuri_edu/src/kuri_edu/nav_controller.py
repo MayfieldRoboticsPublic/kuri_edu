@@ -44,6 +44,7 @@ class NavController(object):
         '''
         if os.path.isfile(NavController.MAP_PATH):
             self._map_manager.load_map(NavController.MAP_PATH)
+            self._map_manager.start_localization()
         else:
             # If we didn't find a map, that may be OK.  The user may not have
             # created one yet.

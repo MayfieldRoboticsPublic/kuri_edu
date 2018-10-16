@@ -17,9 +17,17 @@ software package to experiment with their own robot behaviors
     <!-- Kuri's face recognition -->
     <include file="$(find vision_bridge)/launch/vision_bridge.launch"/>
 
+    <!-- Localization, if a map has been created.  OORT is just used as a map server -->
+    <node name="oort_ros_mapping"
+          pkg="oort"
+          type="oort_ros"
+          required="true"/>
+    <include file="$(find gizmo_ros_navigation)/launch/amcl.launch"/>
+
     <!-- Below are the nodes that can be modified as part of the Kuri EDU activities -->
     <include file="$(find kuri_edu)/launch/safety_controller.launch"/> 
     <include file="$(find kuri_edu)/launch/head_controller.launch"/> 
     <include file="$(find kuri_edu)/launch/chest_light_controller.launch"/> 
+    <include file="$(find kuri_edu)/launch/nav_controller.launch"/>
 
 </launch>

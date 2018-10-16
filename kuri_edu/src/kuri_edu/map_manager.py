@@ -30,6 +30,11 @@ class MapManager(object):
             oort_msgs.srv.SetString
         )
 
+        self._map_republish_srv = rospy.ServiceProxy(
+            "oort_ros_mapping/map/republish_maps",
+            std_srvs.srv.Empty
+        )
+
         self._mapping_state_srv = rospy.ServiceProxy(
             "oort_ros_mapping/map/state",
             oort_msgs.srv.GetString
@@ -48,6 +53,11 @@ class MapManager(object):
         self._notify_dock_srv = rospy.ServiceProxy(
             "oort_ros_mapping/map/notify_docked",
             std_srvs.srv.Empty
+        )
+
+        self._amcl_start_srv = rospy.ServiceProxy(
+            "localization_start",
+             std_srvs.srv.Empty
         )
 
         self._map_sub = rospy.Subscriber(
@@ -86,6 +96,20 @@ class MapManager(object):
 
     def save_waypoint(self, nspace, wp_name):
         self._graph_loc_create_srv(nspace, wp_name)
+
+    def start_localization(self):
+        '''
+        Starts AMCL
+        This method expects OORT to have a map.  Either loaded from disk, or
+        created
+        '''
+        # Make sure we're not actively mapping, or both OORT and AMCL are
+        # going to try to publish odom
+        assert self.get_map_state() != "mapping"
+
+        self._amcl_start_srv()
+        # AMCL will use the first map it sees after it's started:
+        self._map_republish_srv()
 
     def start_mapping(self):
         '''
