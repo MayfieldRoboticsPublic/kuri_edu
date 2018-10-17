@@ -237,6 +237,13 @@ class MapManager(object):
         # - map.md5
         self._mapping_start_srv(os.path.join(map_path, "map"))
         self._map_path = map_path
+
+        # OORT has a bug where it will start mapping, but it won't be ready
+        # to save waypoints because it doesn't have a pose estimate yet.
+        # This won't get fixed in OORT unfortunately, so we just need to give
+        # OORT some extra time to start
+        rospy.sleep(1.0)
+
         return map_path
 
     def stop_mapping(self):
