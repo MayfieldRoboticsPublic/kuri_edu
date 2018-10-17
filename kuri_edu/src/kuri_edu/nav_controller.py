@@ -4,8 +4,6 @@ import rospy
 
 import mayfield_msgs.msg
 import mayfield_utils
-import mobile_base
-from mobile_base import HeadClient
 
 from .map_manager import MapManager
 from .power_monitor import PowerMonitor
@@ -37,7 +35,6 @@ class NavController(object):
         self._map_manager = MapManager()
         self._power_monitor = None  # Created when we start to run
 
-
     def run(self):
         '''
         Look in the home directory to see if there's a simlink to an active
@@ -58,8 +55,9 @@ class NavController(object):
             # created one yet.
             # See kuri_mapping.launch and the assosciated activity to see how
             # to create a map
-            rospy.logwarn("Did not find a simlink to a map file at ~/map.map_capnp")
-
+            rospy.logwarn(
+                "Did not find a simlink to a map file at ~/map.map_capnp"
+            )
 
         # Indicate to the world that we're running and ready to go:
         self._pub.publish(

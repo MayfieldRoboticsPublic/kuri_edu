@@ -1,19 +1,15 @@
 #!/usr/bin/env python
-import os.path
 import threading
 
 import rostest
 import rospy
 
 import amcl.msg
-import geometry_msgs.msg
 import nav_msgs.msg
 
 import gizmo_hw_sim.srv
-import oort_msgs.srv
 
 import mayfield_utils
-import mobile_base
 
 import maytest.desktop
 

@@ -120,7 +120,8 @@ class MapManager(object):
 
         self._relocalization_pub = rospy.Publisher(
             "initialpose_cloud",
-            amcl.msg.HypothesisSet
+            amcl.msg.HypothesisSet,
+            queue_size=1
         )
 
         self._map_sub = rospy.Subscriber(
