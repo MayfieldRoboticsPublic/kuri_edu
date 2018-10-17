@@ -35,6 +35,7 @@ class NavController(object):
         )
 
         self._map_manager = MapManager()
+        self._power_monitor = None  # Created when we start to run
 
 
     def run(self):
@@ -48,6 +49,10 @@ class NavController(object):
             # Assume that on start-up we're on or near the dock.  It's as good
             # a guess as any. . .
             self._map_manager.localize_on_dock()
+            self._power_monitor = PowerMonitor(
+                dock_changed_cb=self._dock_changed_cb
+            )
+
         else:
             # If we didn't find a map, that may be OK.  The user may not have
             # created one yet.
@@ -69,3 +74,9 @@ class NavController(object):
     def shutdown(self):
         self._map_manager.shutdown()
 
+    def _dock_changed_cb(self, msg):
+        '''
+        To help AMCL, relocalize to the dock whenever we're on it
+        '''
+        if msg.dock_present:
+            self._map_manager.localize_on_dock()
