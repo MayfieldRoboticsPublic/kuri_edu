@@ -1,0 +1,19 @@
+<!--
+  Driver for the logitech rumblepad2 joystick.
+
+  Use the D pad while pressing and holding the left trigger button (5) to control.
+-->
+<launch>
+
+  <arg name="run_smoother" default="true"/>
+  <arg name="ps3" default="false"/>
+  <arg name="xbox360" default="true"/>
+
+  <node pkg="kuri_edu" type="joystick_teleop" name="joystick_teleop">
+  </node>
+
+  <node pkg="joy" type="joy_node" name="joystick">
+    <param name="dev" value="/dev/input/js0"/>
+  </node>
+
+</launch>

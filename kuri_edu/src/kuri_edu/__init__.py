@@ -12,6 +12,7 @@ from .map_manager import MapManager
 from .power_monitor import PowerMonitor
 from .pulse_animation import PulseAnimation
 
+from .joystick_teleop import Joystick
 
 __all__ = [
     CapTouchChestLed,
@@ -26,4 +27,6 @@ __all__ = [
     MapManager,
     PowerMonitor,
     PulseAnimation,
+
+    Joystick,
 ]

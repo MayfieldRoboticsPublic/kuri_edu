@@ -14,6 +14,7 @@ install(PROGRAMS
   scripts/mapping_controller
   scripts/nav_controller
   scripts/safety_controller
+  scripts/joystick_teleop
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
