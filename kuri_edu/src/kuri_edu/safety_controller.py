@@ -57,6 +57,15 @@ class SafetyController(object):
             self._forward_twists
         )
 
+        # May nav comes in on a different topic.  A move advanced robot may
+        # want to handle nav commands differently, but for this simple robot,
+        # we'll treat them the same as keyboard teleop twist messages
+        self._nav_vel_sub = rospy.Subscriber(
+            "nav_cmd_vel",
+            geometry_msgs.msg.Twist,
+            self._forward_twists
+        )
+
     def run(self):
 
         # Indicate to the world that we're running and ready to go:

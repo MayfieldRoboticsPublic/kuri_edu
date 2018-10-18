@@ -1,9 +1,13 @@
 import os.path
 
 import rospy
+from tf.transformations import euler_from_quaternion
 
 import mayfield_msgs.msg
 import mayfield_utils
+import may_nav_py.nav
+
+import geometry_msgs.msg
 
 from .map_manager import MapManager
 from .power_monitor import PowerMonitor
@@ -34,6 +38,22 @@ class NavController(object):
 
         self._map_manager = MapManager()
         self._power_monitor = None  # Created when we start to run
+
+        self._nav_client = may_nav_py.nav.Nav(
+            on_nav_cb=lambda: None,
+            on_nav_end_cb=lambda: None,
+            on_move_cb=lambda fb, tilt: None,
+            robot_pose_se2=lambda: None
+        )
+
+        # If you're using RVIZ, you can send a nav goal to the robot on the
+        # /move_base_simple/goal topic.  We'll listen on that topic and
+        # forward the goal over to may_nav
+        self._nav_goal_sub = rospy.Subscriber(
+            "move_base_simple/goal",
+            geometry_msgs.msg.PoseStamped,
+            self._goal_received_cb
+        )
 
     def run(self):
         '''
@@ -70,6 +90,7 @@ class NavController(object):
             return
 
     def shutdown(self):
+        self._nav_goal_sub.unregister()
         self._map_manager.shutdown()
 
     def _dock_changed_cb(self, msg):
@@ -78,3 +99,22 @@ class NavController(object):
         '''
         if msg.dock_present:
             self._map_manager.localize_on_dock()
+
+    def _goal_received_cb(self, msg):
+        '''
+        For nav goals received from rviz
+        '''
+        # euler from quaternion expects a list, not a geometry_msgs.quaternion
+        quat = [
+            msg.pose.orientation.x,
+            msg.pose.orientation.y,
+            msg.pose.orientation.z,
+            msg.pose.orientation.w
+        ]
+
+        self._nav_client.go_to_pos(
+            x=msg.pose.position.x,
+            y=msg.pose.position.y,
+            theta=euler_from_quaternion(quat)[2],
+            mode=may_nav_py.nav.Nav.TOUCH_DRIVE
+        )

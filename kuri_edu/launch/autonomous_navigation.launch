@@ -1,0 +1,24 @@
+<launch>
+    <!-- Autonomous Navigation -->
+    <node name="may_nav"
+          pkg="may_nav_ros"
+          type="nav"
+          respawn="True"
+          respawn_delay="2.0">
+        <remap from="cmd_vel" to="nav_cmd_vel"/>
+        <remap from="scan" to="/scan_reduced_nav"/>
+        <!-- map_cleaned has small unknown spaces removed and obstacles smoothed
+             out to make it easier for may_nav to use -->
+        <remap from="/map" to="map_cleaned"/>
+
+        <rosparam command="load"
+                  file="$(find may_nav_ros)/config/local_planner_params_p3-ds.yaml"
+                  ns="local_planner"/>
+        <rosparam command="load"
+                  file="$(find may_nav_ros)/config/global_planner_params_p3-ds.yaml"
+                  ns="global_planner"/>
+        <rosparam command="load"
+                  file="$(find may_nav_ros)/config/local_map_params_p3-ds.yaml"
+                  ns="local_map"/>
+    </node>
+</launch>

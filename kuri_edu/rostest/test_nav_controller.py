@@ -5,6 +5,7 @@ import rostest
 import rospy
 
 import amcl.msg
+import geometry_msgs.msg
 import nav_msgs.msg
 
 import gizmo_hw_sim.srv
@@ -53,6 +54,11 @@ class TestNavController(maytest.desktop.RosTestBase):
             gizmo_hw_sim.srv.Dock
         )
 
+        cls.goal_pub = rospy.Publisher(
+            "move_base_simple/goal",
+            geometry_msgs.msg.PoseStamped
+        )
+
         # Wait for the DUT to be online before starting
         mayfield_utils.wait_for_nodes(['nav_controller'])
 
@@ -77,6 +83,36 @@ class TestNavController(maytest.desktop.RosTestBase):
         self.dock_srv(is_docked=True, is_charging=False)
 
         monitor.wait_for_message()
+
+    def test_03_test_autonomous_navigation(self):
+
+        initial_loc = self.get_gizmo_location()
+        rospy.loginfo("Kuri started at {}".format(initial_loc))
+
+        self.goal_pub.publish(
+            geometry_msgs.msg.PoseStamped(
+                pose=geometry_msgs.msg.Pose(
+                    position=geometry_msgs.msg.Point(1, 0, 0),
+                    orientation=geometry_msgs.msg.Quaternion(0, 0, 0, 1)
+                )
+            )
+        )
+
+        # Poll to see that Kuri moves to the new destination
+        rate = rospy.Rate(1)
+        start = rospy.get_time()
+
+        # Wait until we're done moving
+        while rospy.get_time() - start < 15:
+            loc = self.get_gizmo_location()
+            if abs(loc[0] - -3.5) <= 0.1:
+                break
+            rate.sleep()
+
+        # Check that we navigated to where we want to go
+        final_loc = self.get_gizmo_location()
+        self.assertAlmostEquals(final_loc[0], -3.5, places=1)
+        self.assertAlmostEquals(final_loc[1], -5.4, places=1)
 
 
 if __name__ == '__main__':

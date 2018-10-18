@@ -18,11 +18,10 @@ software package to experiment with their own robot behaviors
     <include file="$(find vision_bridge)/launch/vision_bridge.launch"/>
 
     <!-- Localization, if a map has been created.  OORT is just used as a map server -->
-    <node name="oort_ros_mapping"
-          pkg="oort"
-          type="oort_ros"
-          required="true"/>
-    <include file="$(find gizmo_ros_navigation)/launch/amcl.launch"/>
+    <include file="$(find kuri_edu)/launch/mapping.launch"/>
+
+    <!-- Autonomous Navigation -->
+    <include file="$(find kuri_edu)/launch/autonomous_navigation.launch"/>
 
     <!-- Below are the nodes that can be modified as part of the Kuri EDU activities -->
     <include file="$(find kuri_edu)/launch/safety_controller.launch"/> 
