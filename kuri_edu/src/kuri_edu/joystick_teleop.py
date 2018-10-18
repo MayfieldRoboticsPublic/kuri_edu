@@ -4,8 +4,6 @@ from sensor_msgs.msg import Joy
 from collections import namedtuple
 import math
 import mobile_base
-from .pulse_animation import PulseAnimation
-import threading
 import os
 import subprocess
 
@@ -181,26 +179,24 @@ class Joystick:
         R = self._map_color(0., radians, radius)
         G = self._map_color(math.pi*2./3., radians, radius)
         B = self._map_color(math.pi*4./3., radians, radius)
-        self._light_client.put_pixels([(R, G, B)]*mobile_base.ChestLightClient.NUM_LEDS)
+        pixels = [(R, G, B)]*mobile_base.ChestLightClient.NUM_LEDS
+        self._light_client.put_pixels(pixels)
 
     def play(self, input_name):
         if self.last_msg.header.stamp.to_sec() - self.last_played > 1.0:
-            #if self.current_play is not None:
-            #    self.current_play.cancel()
             self.last_played = self.last_msg.header.stamp.to_sec()
             self.current_play = self.play_sound(SOUND_MAP[input_name])
 
     def play_sound(self, sound_file):
-        #rospy.logwarn("PLAYING {}".format(sound_file))
         command = ['mplayer',
                    '-slave', '-quiet', '-novideo', '-ao', 'alsa',
                    SOUNDS_LOC + sound_file]
         with open(os.devnull, 'w') as DEVNULL:
             self._process = subprocess.Popen(command,
-                                  stdin=subprocess.PIPE,
-                                  stdout=DEVNULL,
-                                  stderr=DEVNULL,
-                                  preexec_fn=os.setsid)
+                                             stdin=subprocess.PIPE,
+                                             stdout=DEVNULL,
+                                             stderr=DEVNULL,
+                                             preexec_fn=os.setsid)
         return None
 
     def publish_vel(self, event):
@@ -217,4 +213,3 @@ class Joystick:
     def shutdown(self):
         self.timer.shutdown()
         self.joy_sub.unregister()
-
