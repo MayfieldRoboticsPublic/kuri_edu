@@ -1,0 +1,15 @@
+<!--
+Launches a node which will attempt to load a map
+-->
+
+<launch>
+
+    <arg name="cla" default=""/> <!-- Command-line arguments -->
+
+    <node name="nav_controller"
+          pkg="kuri_edu"
+          type="nav_controller"
+          required="true"
+          args="$(arg cla)"
+    />
+</launch>

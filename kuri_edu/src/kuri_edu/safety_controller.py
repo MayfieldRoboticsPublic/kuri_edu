@@ -134,3 +134,7 @@ class SafetyController(object):
                 angular=geometry_msgs.msg.Vector3(0, 0, 0)
             )
         )
+        # We don't have a closed-loop way of figuring out when the zero
+        # velocity has made it down to the wheels, so we'll open-loop
+        # wait here:
+        rospy.sleep(0.5)
