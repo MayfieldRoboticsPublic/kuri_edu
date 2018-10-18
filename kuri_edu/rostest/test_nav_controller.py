@@ -3,7 +3,6 @@ import threading
 
 import rostest
 import rospy
-from tf.transformations import quaternion_from_euler
 
 import amcl.msg
 import geometry_msgs.msg
@@ -104,7 +103,7 @@ class TestNavController(maytest.desktop.RosTestBase):
         start = rospy.get_time()
 
         # Wait until we're done moving
-        while rospy.get_time() - start  < 15:
+        while rospy.get_time() - start < 15:
             loc = self.get_gizmo_location()
             if abs(loc[0] - -3.5) <= 0.1:
                 break
