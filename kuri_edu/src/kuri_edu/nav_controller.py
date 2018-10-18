@@ -104,8 +104,7 @@ class NavController(object):
         '''
         For nav goals received from rviz
         '''
-        rospy.logerr("Goal received: {}".format(msg))
-
+        # euler from quaternion expects a list, not a geometry_msgs.quaternion
         quat = [
             msg.pose.orientation.x,
             msg.pose.orientation.y,

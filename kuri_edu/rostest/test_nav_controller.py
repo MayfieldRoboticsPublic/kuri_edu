@@ -93,8 +93,7 @@ class TestNavController(maytest.desktop.RosTestBase):
         self.goal_pub.publish(
             geometry_msgs.msg.PoseStamped(
                 pose=geometry_msgs.msg.Pose(
-                    # Launch file starts kuri at -4.5, -5.4.  Move fowrad 1m
-                    position=geometry_msgs.msg.Point(-3.5, -5.4, 0),
+                    position=geometry_msgs.msg.Point(1, 0, 0),
                     orientation=geometry_msgs.msg.Quaternion(0, 0, 0, 1)
                 )
             )
@@ -107,15 +106,14 @@ class TestNavController(maytest.desktop.RosTestBase):
         # Wait until we're done moving
         while rospy.get_time() - start  < 15:
             loc = self.get_gizmo_location()
-            print loc
-            if abs(loc[0] - 1) <= 0.1:
+            if abs(loc[0] - -3.5) <= 0.1:
                 break
             rate.sleep()
 
         # Check that we navigated to where we want to go
         final_loc = self.get_gizmo_location()
-        self.assertAlmostEquals(final_loc[0], 1, places=1)
-        self.assertAlmostEquals(final_loc[1], 0, places=1)
+        self.assertAlmostEquals(final_loc[0], -3.5, places=1)
+        self.assertAlmostEquals(final_loc[1], -5.4, places=1)
 
 
 if __name__ == '__main__':
